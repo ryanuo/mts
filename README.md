@@ -1,80 +1,56 @@
-<p align="center">
-<img src="https://user-images.githubusercontent.com/11247099/140462375-7b7ac4db-35b7-453c-8a05-13d8d20282c4.png" width="600"/>
-</p>
+# mts 设备预览组件
 
-<h2 align="center">
-<a href="https://github.com/antfu/vitesse">Vitesse</a> for Nuxt 4
-</h2><br>
+本项目是一个基于 Nuxt4 和 UnoCSS 的多设备网页预览组件，支持电脑、笔记本、手机、平板四种设备模拟，支持自定义网址、滚动条、协议切换等功能。
 
-<p align="center">
-<br>
-<a href="https://vitesse-nuxt3.netlify.app/">🖥 Online Preview</a>
-<br><br>
-<a href="https://stackblitz.com/github/antfu/vitesse-nuxt"><img src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" alt=""></a>
-</p>
+## 技术栈
 
-## Features
+- [Nuxt4](https://nuxt.com/)
+- [UnoCSS](https://unocss.dev/)
+- [Vue 3](https://vuejs.org/)
 
-- 💚 [Nuxt 4](https://nuxt.com/) - SSR, ESR, File-based routing, components auto importing, modules, etc.
+## 主要功能
 
-- ⚡️ Vite - Instant HMR.
+- 多设备预览（电脑、笔记本、手机、平板）
+- 支持自定义每种设备的网址
+- 支持切换 http/https 协议
+- 支持显示/隐藏滚动条
+- 预览时点击空白处可关闭预览
+- 响应式布局，适配不同屏幕宽度
 
-- 🎨 [UnoCSS](https://github.com/unocss/unocss) - The instant on-demand atomic CSS engine.
+## 使用方法
 
-- 😃 Use icons from any icon sets in Pure CSS, powered by [UnoCSS](https://github.com/unocss/unocss).
+1. 安装依赖
 
-- 🔥 The `<script setup>` syntax.
+   ```bash
+   pnpm install
+   # 或
+   npm install
+   ```
 
-- 🍍 [State Management via Pinia](https://github.com/vuejs/pinia), see [./app/composables/user.ts](./app/composables/user.ts).
+2. 启动开发环境
 
-- 📑 [Layout system](./app/layouts).
+   ```bash
+   pnpm dev
+   # 或
+   npm run dev
+   ```
 
-- 📥 APIs auto importing - for Composition API, VueUse and custom composables.
+3. 在页面或布局中引入组件
 
-- 🏎 Zero-config cloud functions and deploy.
+   ```vue
+   <DevicePreview />
+   ```
 
-- 🦾 TypeScript, of course.
+## UnoCSS 配置建议
 
-- 📲 [PWA](https://github.com/vite-pwa/nuxt) with offline support and auto-update behavior.
+- 推荐在 `unocss.config.ts` 中 safelist 设备预览区的背景图相关类名。
+- iconfont 建议通过 CDN 或本地引入。
 
-## Plugins
+## 目录结构
 
-### Nuxt Modules
+- `components/DevicePreview.vue` 设备预览主组件
+- `assets/images/new-model/` 设备模拟图片资源
 
-- [VueUse](https://github.com/vueuse/vueuse) - collection of useful composition APIs.
-- [ColorMode](https://github.com/nuxt-modules/color-mode) - dark and Light mode with auto detection made easy with Nuxt.
-- [UnoCSS](https://github.com/unocss/unocss) - the instant on-demand atomic CSS engine.
-- [Pinia](https://github.com/vuejs/pinia) - intuitive, type safe, light and flexible Store for Vue.
-- [VitePWA](https://github.com/vite-pwa/nuxt) - zero-config PWA Plugin for Nuxt 4.
-- [DevTools](https://github.com/nuxt/devtools) - unleash Nuxt Developer Experience.
+## 贡献与反馈
 
-## IDE
-
-We recommend using [VS Code](https://code.visualstudio.com/) with [Volar](https://github.com/johnsoncodehk/volar) to get the best experience (You might want to disable [Vetur](https://vuejs.github.io/vetur/) if you have it).
-
-## Variations
-
-- [vitesse](https://github.com/antfu/vitesse) - Opinionated Vite Starter Template
-- [vitesse-lite](https://github.com/antfu/vitesse-lite) - Lightweight version of Vitesse
-- [vitesse-nuxt-bridge](https://github.com/antfu/vitesse-nuxt-bridge) - Vitesse for Nuxt 2 with Bridge
-- [vitesse-webext](https://github.com/antfu/vitesse-webext) - WebExtension Vite starter template
-
-## Try it now!
-
-### Online
-
-<a href="https://stackblitz.com/github/antfu/vitesse-nuxt"><img src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" alt=""></a>
-
-### GitHub Template
-
-[Create a repo from this template on GitHub](https://github.com/antfu/vitesse-nuxt/generate).
-
-### Clone to local
-
-If you prefer to do it manually with the cleaner git history
-
-```bash
-npx degit antfu/vitesse-nuxt my-nuxt-app
-cd my-nuxt-app
-pnpm i # If you don't have pnpm installed, run: npm install -g pnpm
-```
+如有建议或问题，欢迎提交 issue 或 PR。

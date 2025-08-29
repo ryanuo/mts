@@ -57,9 +57,7 @@ watch(url, (n) => {
       >
         <iframe
           class="border border-gray-200 rounded-3xl left-1/2 top-[10px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || computer}`"
-          :scrolling="scrollBar ? 'yes' : 'no'"
-          width="1340" height="876"
+          :src="`${protocol}://${url || computer}`" :scrolling="scrollBar ? 'yes' : 'no'" width="1340" height="876"
           style="transform:scale(0.44); transform-origin:top center;"
         />
       </div>
@@ -72,9 +70,7 @@ watch(url, (n) => {
       >
         <iframe
           class="rounded-t-xl left-1/2 top-[10px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || laptop}`"
-          :scrolling="scrollBar ? 'yes' : 'no'"
-          width="788" height="506"
+          :src="`${protocol}://${url || laptop}`" :scrolling="scrollBar ? 'yes' : 'no'" width="788" height="506"
           style="transform:scale(0.6); transform-origin:top center;"
         />
       </div>
@@ -87,9 +83,7 @@ watch(url, (n) => {
       >
         <iframe
           class="rounded-[60px] left-1/2 top-[8px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || phone}`"
-          :scrolling="scrollBar ? 'yes' : 'no'"
-          width="407" height="877"
+          :src="`${protocol}://${url || phone}`" :scrolling="scrollBar ? 'yes' : 'no'" width="407" height="877"
           style="transform:scale(0.37); transform-origin:top center;"
         />
       </div>
@@ -102,9 +96,7 @@ watch(url, (n) => {
       >
         <iframe
           class="rounded-[40px] left-1/2 top-[10px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || pad}`"
-          :scrolling="scrollBar ? 'yes' : 'no'"
-          width="850" height="1120"
+          :src="`${protocol}://${url || pad}`" :scrolling="scrollBar ? 'yes' : 'no'" width="850" height="1120"
           style="transform:scale(0.332); transform-origin:top center;"
         />
       </div>
@@ -112,12 +104,23 @@ watch(url, (n) => {
 
     <!-- 顶部控制条 -->
     <transition name="fade">
-      <div v-if="!activeDevice" class="text-white/80 bg-black/80 flex h-16 w-full shadow items-center top-0 justify-center fixed z-999">
+      <div
+        v-if="!activeDevice"
+        class="text-white/80 bg-black/80 flex h-16 w-full shadow items-center top-0 justify-center fixed z-999"
+      >
         <!-- 网址输入 -->
         <div class="ml-5 flex">
-          <span class="mr-2 cursor-pointer" @click.stop="customURL = !customURL">网址</span>
+          <span class="cursor-pointer" @click.stop="customURL = !customURL">网址</span>
           <div>
-            <span>{{ protocol }}://</span>
+            <!-- 协议选择 -->
+            <select v-model="protocol" name="protocol" class="text-white ml-3 px-3 rounded-full bg-gray-600 h-6">
+              <option value="http">
+                http
+              </option>
+              <option value="https">
+                https
+              </option>
+            </select>
             <input v-model.trim="url" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
           </div>
 
@@ -126,7 +129,10 @@ watch(url, (n) => {
             <div class="mb-2 flex items-center">
               <span class="mr-2">笔记本</span>
               <span>{{ protocol }}://</span>
-              <input v-model.trim="laptop" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
+              <input
+                v-model.trim="laptop" placeholder="请输入网址"
+                class="ml-2 border-b border-white/30 bg-transparent w-40"
+              >
             </div>
             <div class="mb-2 flex items-center">
               <span class="mr-2">手机</span>
@@ -141,7 +147,10 @@ watch(url, (n) => {
             <div class="mb-2 flex items-center">
               <span class="mr-2">电脑</span>
               <span>{{ protocol }}://</span>
-              <input v-model.trim="computer" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
+              <input
+                v-model.trim="computer" placeholder="请输入网址"
+                class="ml-2 border-b border-white/30 bg-transparent w-40"
+              >
             </div>
             <div class="mt-2 text-center cursor-pointer" @click="customURL = false">
               <i class="iconfont icon-cancel-1-copy" />
@@ -154,16 +163,6 @@ watch(url, (n) => {
           <input v-model="scrollBar" type="checkbox" class="hidden">
           <span class="text-xs ml-2">滚动条</span>
         </label>
-
-        <!-- 协议选择 -->
-        <select v-model="protocol" class="text-white ml-5 px-3 rounded-full bg-gray-600 h-8">
-          <option value="http">
-            http
-          </option>
-          <option value="https">
-            https
-          </option>
-        </select>
       </div>
     </transition>
   </section>
@@ -175,6 +174,7 @@ watch(url, (n) => {
 .fade-leave-active {
   transition: opacity 0.5s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

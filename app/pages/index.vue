@@ -8,7 +8,6 @@ const online = useOnline()
 
 <template>
   <div>
-    <Logos mb-6 />
     <ClientOnly>
       <Suspense>
         <PageView v-if="online" />
@@ -27,6 +26,5 @@ const online = useOnline()
         </div>
       </template>
     </ClientOnly>
-    <InputEntry />
   </div>
 </template>

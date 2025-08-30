@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { Dropdown } from 'floating-vue'
+import { ref, watch } from 'vue'
+
 enum Device {
   phone = 'phone',
   pad = 'pad',
@@ -13,7 +16,6 @@ const phone = ref('')
 const pad = ref('')
 const computer = ref('')
 const laptop = ref('')
-const customURL = ref(false)
 const scrollBar = ref(false)
 const coverShow = ref(false)
 
@@ -110,57 +112,74 @@ watch(url, (n) => {
       >
         <!-- 网址输入 -->
         <div class="ml-5 flex">
-          <span class="cursor-pointer" @click.stop="customURL = !customURL">网址</span>
+          <!-- 使用浮动弹窗替换原网址弹窗 -->
+          <Dropdown placement="bottom" :triggers="['click']" class="border-0 relative">
+            <span class="flex cursor-pointer items-center">
+              <span class="i-carbon-application-web mr-1" />
+              网址
+            </span>
+            <template #popper>
+              <div class="text-sm text-white/80 p-4 rounded-b-xl bg-[#333] min-w-60 shadow">
+                <div class="mb-2 flex items-center">
+                  <span class="mr-2">笔记本</span>
+                  <span>{{ protocol }}://</span>
+                  <input
+                    v-model.trim="laptop" placeholder="请输入网址"
+                    class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40"
+                  >
+                </div>
+                <div class="mb-2 flex items-center">
+                  <span class="mr-2">手机</span>
+                  <span>{{ protocol }}://</span>
+                  <input v-model.trim="phone" placeholder="请输入网址" class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40">
+                </div>
+                <div class="mb-2 flex items-center">
+                  <span class="mr-2">平板</span>
+                  <span>{{ protocol }}://</span>
+                  <input v-model.trim="pad" placeholder="请输入网址" class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40">
+                </div>
+                <div class="mb-2 flex items-center">
+                  <span class="mr-2">电脑</span>
+                  <span>{{ protocol }}://</span>
+                  <input
+                    v-model.trim="computer" placeholder="请输入网址"
+                    class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40"
+                  >
+                </div>
+              </div>
+            </template>
+          </Dropdown>
           <div>
-            <!-- 协议选择 -->
-            <select v-model="protocol" name="protocol" class="text-white ml-3 px-3 rounded-full bg-gray-600 h-6">
-              <option value="http">
-                http
-              </option>
-              <option value="https">
-                https
-              </option>
-            </select>
+            <!-- 协议选择浮动下拉 -->
+            <Dropdown placement="bottom" class="ml-3 inline-block">
+              <button class="text-white px-3 rounded-full bg-gray-600 flex h-6 items-center">
+                {{ protocol }}
+                <svg class="ml-1 h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path d="M5.25 7.5L10 12.25L14.75 7.5" /></svg>
+              </button>
+              <template #popper>
+                <div class="text-black rounded bg-white min-w-20 shadow">
+                  <div
+                    class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    @click="protocol = 'http'"
+                  >
+                    http
+                  </div>
+                  <div
+                    class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    @click="protocol = 'https'"
+                  >
+                    https
+                  </div>
+                </div>
+              </template>
+            </Dropdown>
             <input v-model.trim="url" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
-          </div>
-
-          <!-- 自定义多端网址 -->
-          <div v-if="customURL" class="text-sm p-4 rounded-b-xl bg-[#333] shadow top-16 absolute">
-            <div class="mb-2 flex items-center">
-              <span class="mr-2">笔记本</span>
-              <span>{{ protocol }}://</span>
-              <input
-                v-model.trim="laptop" placeholder="请输入网址"
-                class="ml-2 border-b border-white/30 bg-transparent w-40"
-              >
-            </div>
-            <div class="mb-2 flex items-center">
-              <span class="mr-2">手机</span>
-              <span>{{ protocol }}://</span>
-              <input v-model.trim="phone" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
-            </div>
-            <div class="mb-2 flex items-center">
-              <span class="mr-2">平板</span>
-              <span>{{ protocol }}://</span>
-              <input v-model.trim="pad" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
-            </div>
-            <div class="mb-2 flex items-center">
-              <span class="mr-2">电脑</span>
-              <span>{{ protocol }}://</span>
-              <input
-                v-model.trim="computer" placeholder="请输入网址"
-                class="ml-2 border-b border-white/30 bg-transparent w-40"
-              >
-            </div>
-            <div class="mt-2 text-center cursor-pointer" @click="customURL = false">
-              <i class="iconfont icon-cancel-1-copy" />
-            </div>
           </div>
         </div>
 
         <!-- 滚动条开关 -->
         <label class="ml-5 flex cursor-pointer items-center">
-          <input v-model="scrollBar" type="checkbox" class="hidden">
+          <input v-model="scrollBar" type="checkbox">
           <span class="text-xs ml-2">滚动条</span>
         </label>
       </div>

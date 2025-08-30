@@ -9,13 +9,77 @@ enum Device {
   laptop = 'laptop',
 }
 
+// 设备配置数组
+const deviceConfigs = [
+  {
+    key: Device.computer,
+    name: '电脑',
+    bg: 'bg-[url(/assets/images/new-model/computer.png)]',
+    style: 'h-[572px] w-[610px] left-1/2 top-0 absolute bg-contain bg-no-repeat -translate-x-1/2',
+    activeClass: 'scale-120 z-9999',
+    inactiveClass: 'opacity-0 pointer-events-none',
+    iframe: {
+      class: 'border border-gray-200 rounded-3xl left-1/2 top-[10px] absolute -translate-x-1/2',
+      width: 1340,
+      height: 876,
+      scale: 0.44,
+      radius: '',
+    },
+    model: ref(''),
+  },
+  {
+    key: Device.laptop,
+    name: '笔记本',
+    bg: 'bg-[url(/assets/images/new-model/laptop.png)]',
+    style: 'h-[380px] w-[600px] scale-90 left-0 top-50 absolute bg-contain bg-no-repeat',
+    activeClass: 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-150 z-9999',
+    inactiveClass: '',
+    iframe: {
+      class: 'rounded-t-xl left-1/2 top-[10px] absolute -translate-x-1/2',
+      width: 788,
+      height: 506,
+      scale: 0.6,
+      radius: '',
+    },
+    model: ref(''),
+  },
+  {
+    key: Device.phone,
+    name: '手机',
+    bg: 'bg-[url(/assets/images/new-model/mobile.png)]',
+    style: 'h-[350px] w-[168px] scale-80 left-[56%] top-60 absolute z-2 bg-contain bg-no-repeat',
+    activeClass: 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-200 z-9999',
+    inactiveClass: '',
+    iframe: {
+      class: 'rounded-[60px] left-1/2 top-[8px] absolute -translate-x-1/2',
+      width: 407,
+      height: 877,
+      scale: 0.37,
+      radius: '',
+    },
+    model: ref(''),
+  },
+  {
+    key: Device.pad,
+    name: '平板',
+    bg: 'bg-[url(/assets/images/new-model/tablet.png)]',
+    style: 'h-[400px] w-[300px] left-[65%] top-40 absolute bg-contain bg-no-repeat',
+    activeClass: 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-200 z-9999',
+    inactiveClass: '',
+    iframe: {
+      class: 'rounded-[40px] left-1/2 top-[10px] absolute -translate-x-1/2',
+      width: 850,
+      height: 1120,
+      scale: 0.332,
+      radius: '',
+    },
+    model: ref(''),
+  },
+]
+
 const activeDevice = ref<Device | ''>('')
 const protocol = ref('https')
 const url = ref('www.ryanuo.cc')
-const phone = ref('')
-const pad = ref('')
-const computer = ref('')
-const laptop = ref('')
 const scrollBar = ref(false)
 const coverShow = ref(false)
 
@@ -30,7 +94,8 @@ function handleActiveDevice(device: Device) {
   coverShow.value = true
 }
 
-watch([phone, pad, computer, laptop], () => {
+// 监听所有设备输入框，清空主url
+watch(deviceConfigs.map(d => d.model), () => {
   url.value = ''
 })
 watch(url, (n) => {
@@ -51,57 +116,27 @@ watch(url, (n) => {
 
     <!-- 设备预览区 -->
     <div class="flex h-[650px] w-[1200px] origin-top items-center left-50% top-50% relative z-105 -translate-x-1/2">
-      <!-- 电脑 -->
-      <div
-        class="bg-[url(/assets/images/new-model/computer.png)] h-[572px] w-[610px] cursor-pointer transition duration-500 left-1/2 top-0 absolute bg-contain bg-no-repeat -translate-x-1/2"
-        :class="activeDevice === Device.computer ? 'scale-120 z-9999' : (activeDevice ? 'opacity-0 pointer-events-none' : '')"
-        @click.stop="handleActiveDevice(Device.computer)"
-      >
-        <iframe
-          class="border border-gray-200 rounded-3xl left-1/2 top-[10px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || computer}`" :scrolling="scrollBar ? 'yes' : 'no'" width="1340" height="876"
-          style="transform:scale(0.44); transform-origin:top center;"
-        />
-      </div>
-
-      <!-- 笔记本 -->
-      <div
-        class="bg-[url(/assets/images/new-model/laptop.png)] h-[380px] w-[600px] cursor-pointer scale-90 transition duration-500 left-0 top-50 absolute bg-contain bg-no-repeat"
-        :class="activeDevice === Device.laptop ? 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-150 z-9999' : ''"
-        @click.stop="handleActiveDevice(Device.laptop)"
-      >
-        <iframe
-          class="rounded-t-xl left-1/2 top-[10px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || laptop}`" :scrolling="scrollBar ? 'yes' : 'no'" width="788" height="506"
-          style="transform:scale(0.6); transform-origin:top center;"
-        />
-      </div>
-
-      <!-- 手机 -->
-      <div
-        class="bg-[url(/assets/images/new-model/mobile.png)] h-[350px] w-[168px] cursor-pointer scale-80 transition duration-500 left-[56%] top-60 absolute z-2 bg-contain bg-no-repeat"
-        :class="activeDevice === Device.phone ? 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-200 z-9999' : ''"
-        @click.stop="handleActiveDevice(Device.phone)"
-      >
-        <iframe
-          class="rounded-[60px] left-1/2 top-[8px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || phone}`" :scrolling="scrollBar ? 'yes' : 'no'" width="407" height="877"
-          style="transform:scale(0.37); transform-origin:top center;"
-        />
-      </div>
-
-      <!-- 平板 -->
-      <div
-        class="bg-[url(/assets/images/new-model/tablet.png)] h-[400px] w-[300px] cursor-pointer transition duration-500 left-[65%] top-40 absolute bg-contain bg-no-repeat"
-        :class="activeDevice === Device.pad ? 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-200 z-9999' : ''"
-        @click.stop="handleActiveDevice(Device.pad)"
-      >
-        <iframe
-          class="rounded-[40px] left-1/2 top-[10px] absolute -translate-x-1/2"
-          :src="`${protocol}://${url || pad}`" :scrolling="scrollBar ? 'yes' : 'no'" width="850" height="1120"
-          style="transform:scale(0.332); transform-origin:top center;"
-        />
-      </div>
+      <template v-for="device in deviceConfigs" :key="device.key">
+        <div
+          class="cursor-pointer transition duration-500" :class="[
+            device.bg,
+            device.style,
+            activeDevice === device.key
+              ? device.activeClass
+              : (activeDevice ? device.inactiveClass : ''),
+          ]"
+          @click.stop="handleActiveDevice(device.key)"
+        >
+          <iframe
+            :class="device.iframe.class"
+            :src="`${protocol}://${url || device.model.value}`"
+            :scrolling="scrollBar ? 'yes' : 'no'"
+            :width="device.iframe.width"
+            :height="device.iframe.height"
+            :style="`transform:scale(${device.iframe.scale}); transform-origin:top center;`"
+          />
+        </div>
+      </template>
     </div>
 
     <!-- 顶部控制条 -->
@@ -120,32 +155,17 @@ watch(url, (n) => {
             </span>
             <template #popper>
               <div class="text-sm text-white/80 p-4 rounded-b-xl bg-[#333] min-w-60 shadow">
-                <div class="mb-2 flex items-center">
-                  <span class="mr-2">笔记本</span>
-                  <span>{{ protocol }}://</span>
-                  <input
-                    v-model.trim="laptop" placeholder="请输入网址"
-                    class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40"
-                  >
-                </div>
-                <div class="mb-2 flex items-center">
-                  <span class="mr-2">手机</span>
-                  <span>{{ protocol }}://</span>
-                  <input v-model.trim="phone" placeholder="请输入网址" class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40">
-                </div>
-                <div class="mb-2 flex items-center">
-                  <span class="mr-2">平板</span>
-                  <span>{{ protocol }}://</span>
-                  <input v-model.trim="pad" placeholder="请输入网址" class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40">
-                </div>
-                <div class="mb-2 flex items-center">
-                  <span class="mr-2">电脑</span>
-                  <span>{{ protocol }}://</span>
-                  <input
-                    v-model.trim="computer" placeholder="请输入网址"
-                    class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40"
-                  >
-                </div>
+                <template v-for="device in deviceConfigs" :key="device.key">
+                  <div class="mb-2 flex items-center">
+                    <span class="mr-2">{{ device.name }}</span>
+                    <span>{{ protocol }}://</span>
+                    <input
+                      v-model.trim="device.model.value"
+                      placeholder="请输入网址"
+                      class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40"
+                    >
+                  </div>
+                </template>
               </div>
             </template>
           </Dropdown>

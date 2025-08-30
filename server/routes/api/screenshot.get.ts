@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     await page.goto(target, { waitUntil: 'networkidle2', timeout: 60000 })
     await page.waitForNetworkIdle()
 
-    const screenshot = await page.screenshot({ type: 'png', fullPage: true })
+    const screenshot = await page.screenshot({ type: 'jpeg', fullPage: true, quality: 100 })
     await browser.close()
 
     event.node.res.setHeader('Content-Type', 'image/png')

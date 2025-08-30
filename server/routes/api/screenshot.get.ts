@@ -1,20 +1,31 @@
 // server/api/screenshot.get.ts
+import process from 'node:process'
 import { createError, defineEventHandler, getQuery } from 'h3'
 import { usePuppeteer } from '../../utils/usePuppeteer'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const url = query.url as string
+  let target = ''
 
-  if (!url) {
-    throw createError({ statusCode: 400, statusMessage: 'Missing url param' })
+  const isDev = process.env.NODE_ENV === 'development'
+
+  if (isDev) {
+    target = `http://localhost:${process.env.PORT || 3000}?config=${query.config}`
+  }
+  else {
+    target = `https://mts.ryanuo.cc?config=${query.config}`
+  }
+
+  if (!target) {
+    throw createError({ statusCode: 400, statusMessage: 'Missing url/config param' })
   }
 
   try {
     const browser = await usePuppeteer()
     const page = await browser.newPage()
     await page.setViewport({ width: 1280, height: 800 })
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 })
+    // 直接传入 target，无需解析
+    await page.goto(target, { waitUntil: 'networkidle2', timeout: 60000 })
     await page.waitForNetworkIdle()
 
     const screenshot = await page.screenshot({ type: 'png', fullPage: true })

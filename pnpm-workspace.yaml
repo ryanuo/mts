@@ -18,8 +18,10 @@ catalogs:
     '@antfu/eslint-config': ^4.17.0
     '@sparticuz/chromium': ^138.0.2
     '@types/dom-to-image': ^2.6.7
+    '@types/pako': ^2.0.4
     eslint: ^9.31.0
     eslint-plugin-format: ^1.0.1
+    pako: ^2.1.0
     puppeteer: ^24.17.1
     puppeteer-core: ^24.17.1
     typescript: ^5.8.3

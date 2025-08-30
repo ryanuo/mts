@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Dropdown } from 'floating-vue'
+import pako from 'pako'
 import { ref, watch } from 'vue'
 
 enum Device {
@@ -96,18 +97,36 @@ function handleActiveDevice(device: Device) {
 
 async function fetchScreenshot() {
   try {
-    const res = await $fetch<Blob>(`/api/screenshot?url=${encodeURIComponent('http://www.ryanuo.cc')}`, {
+    // 获取当前预览的 url
+    let targetUrl = ''
+    if (activeDevice.value) {
+      const device = deviceConfigs.find(d => d.key === activeDevice.value)
+      targetUrl = device?.model.value || url.value
+    }
+    else {
+      targetUrl = url.value
+    }
+    // 构造 config 对象
+    const configObj = {
+      protocol: protocol.value,
+      url: targetUrl,
+    }
+    // 压缩加密
+    const json = JSON.stringify(configObj)
+    const gz = pako.gzip(json)
+    const b64 = btoa(String.fromCharCode(...gz))
+    const res = await $fetch<Blob>(`/api/screenshot?config=${encodeURIComponent(b64)}`, {
       responseType: 'blob',
     })
     // 下载 blob
-    const url = window.URL.createObjectURL(res)
+    const blobUrl = window.URL.createObjectURL(res)
     const a = document.createElement('a')
-    a.href = url
+    a.href = blobUrl
     a.download = 'screenshot.png'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
+    window.URL.revokeObjectURL(blobUrl)
   }
   catch (err) {
     console.error('截图失败', err)
@@ -121,6 +140,58 @@ watch(deviceConfigs.map(d => d.model), () => {
 watch(url, (n) => {
   url.value = n.replace(/http(s?):\/\//, '')
 })
+
+// 解码 config 参数（base64+gzip）
+function decodeConfigParam(str: string) {
+  try {
+    const binary = atob(str)
+    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0))
+    const json = pako.ungzip(bytes, { to: 'string' })
+    return JSON.parse(json)
+  }
+  catch (e) {
+    console.error('config参数解码失败', e)
+    return null
+  }
+}
+
+// 解析地址栏参数并设置相关变量
+function applyQueryParams() {
+  const params = new URLSearchParams(window.location.search)
+  // 优先使用 config 参数
+  const configStr = params.get('config')
+  if (configStr) {
+    const cfg = decodeConfigParam(configStr)
+    if (cfg) {
+      if (cfg.protocol)
+        protocol.value = cfg.protocol
+      if (cfg.url)
+        url.value = cfg.url
+      if (cfg.activeDevice && deviceConfigs.some(d => d.key === cfg.activeDevice))
+        activeDevice.value = cfg.activeDevice
+      if (cfg.deviceModels && typeof cfg.deviceModels === 'object') {
+        deviceConfigs.forEach((d) => {
+          if (cfg.deviceModels[d.key])
+            d.model.value = cfg.deviceModels[d.key]
+        })
+      }
+      return // 已处理，无需继续
+    }
+  }
+  // 兼容原有参数
+  const proto = params.get('protocol')
+  const mainUrl = params.get('url')
+  if (proto === 'http' || proto === 'https')
+    protocol.value = proto
+  if (mainUrl)
+    url.value = mainUrl
+  deviceConfigs.forEach((cfg) => {
+    const modelParam = params.get(`model_${cfg.key}`)
+    if (modelParam)
+      cfg.model.value = modelParam
+  })
+}
+applyQueryParams()
 </script>
 
 <template>

@@ -16,9 +16,12 @@ catalogs:
     vite: ^7.0.4
   dev:
     '@antfu/eslint-config': ^4.17.0
+    '@sparticuz/chromium': ^138.0.2
     '@types/dom-to-image': ^2.6.7
     eslint: ^9.31.0
     eslint-plugin-format: ^1.0.1
+    puppeteer: ^24.17.1
+    puppeteer-core: ^24.17.1
     typescript: ^5.8.3
     vue-tsc: ^3.0.1
 

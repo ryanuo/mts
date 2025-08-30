@@ -94,6 +94,26 @@ function handleActiveDevice(device: Device) {
   coverShow.value = true
 }
 
+async function fetchScreenshot() {
+  try {
+    const res = await $fetch<Blob>(`/api/screenshot?url=${encodeURIComponent('http://www.ryanuo.cc')}`, {
+      responseType: 'blob',
+    })
+    // 下载 blob
+    const url = window.URL.createObjectURL(res)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'screenshot.png'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(url)
+  }
+  catch (err) {
+    console.error('截图失败', err)
+  }
+}
+
 // 监听所有设备输入框，清空主url
 watch(deviceConfigs.map(d => d.model), () => {
   url.value = ''
@@ -115,7 +135,7 @@ watch(url, (n) => {
     </transition>
 
     <!-- 设备预览区 -->
-    <div class="flex h-[650px] w-[1200px] origin-top items-center left-50% top-50% relative z-105 -translate-x-1/2">
+    <div class="device-preview-area flex h-[650px] w-[1200px] origin-top items-center left-50% top-50% relative z-105 -translate-x-1/2">
       <template v-for="device in deviceConfigs" :key="device.key">
         <div
           class="cursor-pointer transition duration-500" :class="[
@@ -148,7 +168,7 @@ watch(url, (n) => {
         <!-- 网址输入 -->
         <div class="ml-5 flex">
           <!-- 使用浮动弹窗替换原网址弹窗 -->
-          <Dropdown placement="bottom" :triggers="['click']" class="border-0 relative">
+          <Dropdown placement="bottom" :triggers="['click']" class="border-0 cursor-pointer relative">
             <span class="flex cursor-pointer items-center">
               <span class="i-carbon-application-web mr-1" />
               网址
@@ -202,6 +222,13 @@ watch(url, (n) => {
           <input v-model="scrollBar" type="checkbox">
           <span class="text-xs ml-2">滚动条</span>
         </label>
+        <!-- 截图按钮 -->
+        <button
+          class="text-xs text-white ml-5 px-2 py-1 rounded bg-black/90 cursor-pointer transition hover:bg-black/80"
+          @click="fetchScreenshot"
+        >
+          截图
+        </button>
       </div>
     </transition>
   </section>

@@ -125,7 +125,7 @@ async function fetchScreenshot() {
     const blobUrl = window.URL.createObjectURL(res)
     const a = document.createElement('a')
     a.href = blobUrl
-    a.download = 'screenshot.png'
+    a.download = 'screenshot.jpg'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

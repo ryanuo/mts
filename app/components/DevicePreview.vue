@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { Dropdown } from 'floating-vue'
+import type { DeviceConfig } from '~/types/device'
 import pako from 'pako'
 import { ref, watch } from 'vue'
-
-enum Device {
-  phone = 'phone',
-  pad = 'pad',
-  computer = 'computer',
-  laptop = 'laptop',
-}
+import { Device } from '~/types/device'
+import ControlBar from './ControlBar.vue'
+import CoverOverlay from './CoverOverlay.vue'
+import DeviceFrame from './DeviceFrame.vue'
+import LoadingOverlay from './LoadingOverlay.vue'
 
 // 设备配置数组
-const deviceConfigs = [
+const deviceConfigs: DeviceConfig[] = [
   {
     key: Device.computer,
     name: '电脑',
@@ -89,11 +87,14 @@ function resetPreview() {
   activeDevice.value = ''
   coverShow.value = false
 }
-document.body.addEventListener('click', () => void resetPreview())
 
 function handleActiveDevice(device: Device) {
   activeDevice.value = device
   coverShow.value = true
+}
+
+function handleCloseCover() {
+  resetPreview()
 }
 
 async function fetchScreenshot() {
@@ -196,127 +197,48 @@ function applyQueryParams() {
       cfg.model.value = modelParam
   })
 }
+
+// 初始化
+document.body.addEventListener('click', () => void resetPreview())
 applyQueryParams()
 </script>
 
 <template>
   <section class="mx-auto p-t-30 relative">
     <!-- 截图 loading 蒙层 -->
-    <transition name="fade">
-      <div v-if="loading" class="bg-black/40 flex items-center inset-0 justify-center fixed z-[99999]">
-        <div class="flex flex-col items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2" d="M12 6.99998C9.1747 6.99987 6.99997 9.24998 7 12C7.00003 14.55 9.02119 17 12 17C14.7712 17 17 14.75 17 12"><animateTransform attributeName="transform" attributeType="XML" dur="560ms" from="0,12,12" repeatCount="indefinite" to="360,12,12" type="rotate" /></path></svg>
-          <span class="text-lg text-white">正在截图，请稍候...</span>
-        </div>
-      </div>
-    </transition>
+    <LoadingOverlay :loading="loading" />
 
     <!-- 覆盖层 -->
-    <transition name="fade">
-      <div v-if="coverShow" class="p-10 bg-white flex inset-0 justify-end fixed z-100">
-        <div class="text-2xl cursor-pointer" @click="resetPreview">
-          <i class="iconfont icon-cancel-1-copy" />
-        </div>
-      </div>
-    </transition>
+    <CoverOverlay :show="coverShow" @close="handleCloseCover" />
 
     <!-- 设备预览区 -->
     <div class="device-preview-area flex h-[650px] w-[1200px] origin-top items-center left-50% top-50% relative z-105 -translate-x-1/2">
-      <template v-for="device in deviceConfigs" :key="device.key">
-        <div
-          class="cursor-pointer transition duration-500" :class="[
-            device.bg,
-            device.style,
-            activeDevice === device.key
-              ? device.activeClass
-              : (activeDevice ? device.inactiveClass : ''),
-          ]"
-          @click.stop="handleActiveDevice(device.key)"
-        >
-          <iframe
-            :class="device.iframe.class"
-            :src="`${protocol}://${url || device.model.value}`"
-            :scrolling="scrollBar ? 'yes' : 'no'"
-            :width="device.iframe.width"
-            :height="device.iframe.height"
-            :style="`transform:scale(${device.iframe.scale}); transform-origin:top center;`"
-          />
-        </div>
-      </template>
+      <DeviceFrame
+        v-for="device in deviceConfigs"
+        :key="device.key"
+        :device="device"
+        :is-active="activeDevice === device.key"
+        :has-active-device="!!activeDevice"
+        :protocol="protocol"
+        :url="url"
+        :scroll-bar="scrollBar"
+        @device-click="handleActiveDevice"
+      />
     </div>
 
     <!-- 顶部控制条 -->
-    <transition name="fade">
-      <div
-        v-if="!activeDevice"
-        class="text-white/80 bg-black/80 flex h-16 w-full shadow items-center top-0 justify-center fixed z-999"
-      >
-        <!-- 网址输入 -->
-        <div class="ml-5 flex">
-          <!-- 使用浮动弹窗替换原网址弹窗 -->
-          <Dropdown placement="bottom" :triggers="['click']" class="border-0 cursor-pointer relative">
-            <span class="flex cursor-pointer items-center">
-              <span class="i-carbon-application-web mr-1" />
-              网址
-            </span>
-            <template #popper>
-              <div class="text-sm text-white/80 p-4 rounded-b-xl bg-[#333] min-w-60 shadow">
-                <template v-for="device in deviceConfigs" :key="device.key">
-                  <div class="mb-2 flex items-center">
-                    <span class="mr-2">{{ device.name }}</span>
-                    <span>{{ protocol }}://</span>
-                    <input
-                      v-model.trim="device.model.value"
-                      placeholder="请输入网址"
-                      class="text-white/80 ml-2 border-b border-white/30 bg-transparent w-40"
-                    >
-                  </div>
-                </template>
-              </div>
-            </template>
-          </Dropdown>
-          <div>
-            <!-- 协议选择浮动下拉 -->
-            <Dropdown placement="bottom" class="ml-3 inline-block">
-              <button class="text-white px-3 rounded-full bg-gray-600 flex h-6 items-center">
-                {{ protocol }}
-                <svg class="ml-1 h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path d="M5.25 7.5L10 12.25L14.75 7.5" /></svg>
-              </button>
-              <template #popper>
-                <div class="text-black rounded bg-white min-w-20 shadow">
-                  <div
-                    class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    @click="protocol = 'http'"
-                  >
-                    http
-                  </div>
-                  <div
-                    class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    @click="protocol = 'https'"
-                  >
-                    https
-                  </div>
-                </div>
-              </template>
-            </Dropdown>
-            <input v-model.trim="url" placeholder="请输入网址" class="ml-2 border-b border-white/30 bg-transparent w-40">
-          </div>
-        </div>
-
-        <!-- 滚动条开关 -->
-        <label class="ml-5 flex cursor-pointer items-center">
-          <input v-model="scrollBar" type="checkbox">
-          <span class="text-xs ml-2">滚动条</span>
-        </label>
-        <!-- 截图按钮 -->
-        <button
-          class="text-xs text-white ml-5 px-2 py-1 rounded bg-black/90 cursor-pointer transition hover:bg-black/80"
-          @click="fetchScreenshot"
-        >
-          截图
-        </button>
-      </div>
-    </transition>
+    <ControlBar
+      v-if="!activeDevice"
+      :device-configs="deviceConfigs"
+      :protocol="protocol"
+      :url="url"
+      :scroll-bar="scrollBar"
+      :loading="loading"
+      @update:protocol="protocol = $event"
+      @update:url="url = $event"
+      @update:scroll-bar="scrollBar = $event"
+      @screenshot="fetchScreenshot"
+    />
   </section>
 </template>
 

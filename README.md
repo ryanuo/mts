@@ -2,6 +2,10 @@
 
 本项目是一个基于 Nuxt4 和 UnoCSS 的多设备网页预览组件，支持电脑、笔记本、手机、平板四种设备模拟，支持自定义网址、滚动条、协议切换等功能。
 
+## 预览效果
+
+<img src="./public/screenshot.png" alt="设备预览效果">
+
 ## 技术栈
 
 - [Nuxt4](https://nuxt.com/)

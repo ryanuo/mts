@@ -31,7 +31,7 @@ const deviceConfigs: DeviceConfig[] = [
     name: '笔记本',
     bg: 'bg-[url(/assets/images/new-model/laptop.png)]',
     style: 'h-[380px] w-[600px] scale-90 left-0 top-50 absolute bg-contain bg-no-repeat',
-    activeClass: 'top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 scale-150! z-[9999]',
+    activeClass: 'top-1/2 right-1/2 translate-x-1/2 -translate-y-1/3 scale-150! z-[9999]',
     inactiveClass: 'opacity-0 pointer-events-none',
     iframe: {
       class: 'rounded-t-xl left-1/2 top-[10px] absolute -translate-x-1/2',
@@ -47,7 +47,7 @@ const deviceConfigs: DeviceConfig[] = [
     name: '手机',
     bg: 'bg-[url(/assets/images/new-model/mobile.png)]',
     style: 'h-[350px] w-[168px] scale-80 left-[56%] top-60 absolute z-2 bg-contain bg-no-repeat',
-    activeClass: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-200! z-[9999]',
+    activeClass: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 scale-200! z-[9999]',
     inactiveClass: 'opacity-0 pointer-events-none',
     iframe: {
       class: 'rounded-[60px] left-1/2 top-[8px] absolute -translate-x-1/2',

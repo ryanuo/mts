@@ -70,5 +70,7 @@ function handleScreenshot() {
     >
       截图
     </button>
+
+    <a class="i-carbon-logo-github cursor-pointer right-6 top-6 absolute" href="https://github.com/ryanuo/mts" target="_blank" />
   </div>
 </template>

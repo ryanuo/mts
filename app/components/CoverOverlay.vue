@@ -17,7 +17,7 @@ function handleClose() {
   <transition name="fade">
     <div v-if="show" class="p-10 bg-white flex inset-0 justify-end fixed z-100">
       <div class="text-2xl cursor-pointer" @click="handleClose">
-        <i class="iconfont icon-cancel-1-copy" />
+        <i class="i-carbon-close inline-block hover:scale-120" />
       </div>
     </div>
   </transition>

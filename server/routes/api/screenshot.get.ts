@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     const screenshot = await page.screenshot({ type: 'jpeg', fullPage: true, quality: 100 })
     await browser.close()
 
-    event.node.res.setHeader('Content-Type', 'image/png')
+    event.node.res.setHeader('Content-Type', 'image/jpeg')
     return screenshot
   }
   catch (err: any) {

@@ -31,8 +31,8 @@ const deviceConfigs: DeviceConfig[] = [
     name: '笔记本',
     bg: 'bg-[url(/assets/images/new-model/laptop.png)]',
     style: 'h-[380px] w-[600px] scale-90 left-0 top-50 absolute bg-contain bg-no-repeat',
-    activeClass: 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-150 z-9999',
-    inactiveClass: '',
+    activeClass: 'top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 scale-150! z-[9999]',
+    inactiveClass: 'opacity-0 pointer-events-none',
     iframe: {
       class: 'rounded-t-xl left-1/2 top-[10px] absolute -translate-x-1/2',
       width: 788,
@@ -47,8 +47,8 @@ const deviceConfigs: DeviceConfig[] = [
     name: '手机',
     bg: 'bg-[url(/assets/images/new-model/mobile.png)]',
     style: 'h-[350px] w-[168px] scale-80 left-[56%] top-60 absolute z-2 bg-contain bg-no-repeat',
-    activeClass: 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-200 z-9999',
-    inactiveClass: '',
+    activeClass: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-200! z-[9999]',
+    inactiveClass: 'opacity-0 pointer-events-none',
     iframe: {
       class: 'rounded-[60px] left-1/2 top-[8px] absolute -translate-x-1/2',
       width: 407,
@@ -63,8 +63,8 @@ const deviceConfigs: DeviceConfig[] = [
     name: '平板',
     bg: 'bg-[url(/assets/images/new-model/tablet.png)]',
     style: 'h-[400px] w-[300px] left-[65%] top-40 absolute bg-contain bg-no-repeat',
-    activeClass: 'top-50 left-50 -translate-x-1/2 -translate-y-1/2 scale-200 z-9999',
-    inactiveClass: '',
+    activeClass: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 scale-180! z-[9999]',
+    inactiveClass: 'opacity-0 pointer-events-none',
     iframe: {
       class: 'rounded-[40px] left-1/2 top-[10px] absolute -translate-x-1/2',
       width: 850,
@@ -77,6 +77,7 @@ const deviceConfigs: DeviceConfig[] = [
 ]
 
 const activeDevice = ref<Device | ''>('')
+const isShowControlBar = ref(true)
 const protocol = ref('https')
 const url = ref('www.ryanuo.cc')
 const scrollBar = ref(false)
@@ -136,6 +137,7 @@ async function fetchScreenshot() {
   }
   finally {
     loading.value = false
+    isShowControlBar.value = true
   }
 }
 
@@ -167,6 +169,7 @@ function applyQueryParams() {
   // 优先使用 config 参数
   const configStr = params.get('config')
   if (configStr) {
+    isShowControlBar.value = false
     const cfg = decodeConfigParam(configStr)
     if (cfg) {
       if (cfg.protocol)
@@ -198,9 +201,14 @@ function applyQueryParams() {
   })
 }
 
-// 初始化
-document.body.addEventListener('click', () => void resetPreview())
-applyQueryParams()
+onMounted(() => {
+  document.body.addEventListener('click', () => void resetPreview())
+  applyQueryParams()
+})
+
+onUnmounted(() => {
+  document.body.removeEventListener('click', () => void resetPreview())
+})
 </script>
 
 <template>
@@ -212,7 +220,7 @@ applyQueryParams()
     <CoverOverlay :show="coverShow" @close="handleCloseCover" />
 
     <!-- 设备预览区 -->
-    <div class="device-preview-area flex h-[650px] w-[1200px] origin-top items-center left-50% top-50% relative z-105 -translate-x-1/2">
+    <div class="flex h-[650px] w-[1200px] origin-top items-center left-50% top-50% relative z-105 -translate-x-1/2">
       <DeviceFrame
         v-for="device in deviceConfigs"
         :key="device.key"
@@ -228,7 +236,7 @@ applyQueryParams()
 
     <!-- 顶部控制条 -->
     <ControlBar
-      v-if="!activeDevice"
+      v-if="!activeDevice && isShowControlBar"
       :device-configs="deviceConfigs"
       :protocol="protocol"
       :url="url"

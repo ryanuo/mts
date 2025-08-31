@@ -37,9 +37,6 @@ catalogs:
     '@sparticuz/chromium':
       specifier: ^138.0.2
       version: 138.0.2
-    '@types/dom-to-image':
-      specifier: ^2.6.7
-      version: 2.6.7
     '@types/pako':
       specifier: ^2.0.4
       version: 2.0.4
@@ -68,9 +65,6 @@ catalogs:
     '@vueuse/core':
       specifier: ^13.5.0
       version: 13.5.0
-    dom-to-image:
-      specifier: ^2.6.0
-      version: 2.6.0
     floating-vue:
       specifier: ^5.2.2
       version: 5.2.2
@@ -123,9 +117,6 @@ importers:
       '@sparticuz/chromium':
         specifier: catalog:dev
         version: 138.0.2
-      '@types/dom-to-image':
-        specifier: catalog:dev
-        version: 2.6.7
       '@types/pako':
         specifier: catalog:dev
         version: 2.0.4
@@ -144,9 +135,6 @@ importers:
       '@vueuse/nuxt':
         specifier: catalog:build
         version: 13.5.0(magicast@0.3.5)(nuxt@4.0.0(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@22.15.29)(@vue/compiler-sfc@3.5.17)(db0@0.3.2)(eslint@9.31.0(jiti@2.4.2))(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.45.1)(terser@5.39.0)(typescript@5.8.3)(vite@7.0.4(@types/node@22.15.29)(jiti@2.4.2)(terser@5.39.0)(yaml@2.8.0))(vue-tsc@3.0.1(typescript@5.8.3))(yaml@2.8.0))(vue@3.5.17(typescript@5.8.3))
-      dom-to-image:
-        specifier: catalog:frontend
-        version: 2.6.0
       eslint:
         specifier: catalog:dev
         version: 9.31.0(jiti@2.4.2)
@@ -2050,9 +2038,6 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
-  '@types/dom-to-image@2.6.7':
-    resolution: {integrity: sha512-me5VbCv+fcXozblWwG13krNBvuEOm6kA5xoa4RrjDJCNFOZSWR3/QLtOXimBHk1Fisq69Gx3JtOoXtg1N1tijg==}
-
   '@types/estree@0.0.39':
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
 
@@ -3137,9 +3122,6 @@ packages:
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
-
-  dom-to-image@2.6.0:
-    resolution: {integrity: sha512-Dt0QdaHmLpjURjU7Tnu3AgYSF2LuOmksSGsUcE6ItvJoCWTBEmiMXcqBdNSAm9+QbbwD7JMoVsuuKX6ZVQv1qA==}
 
   domelementtype@2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
@@ -8457,8 +8439,6 @@ snapshots:
     dependencies:
       '@types/ms': 2.1.0
 
-  '@types/dom-to-image@2.6.7': {}
-
   '@types/estree@0.0.39': {}
 
   '@types/estree@1.0.8': {}
@@ -9787,8 +9767,6 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.5.0
-
-  dom-to-image@2.6.0: {}
 
   domelementtype@2.3.0: {}
 

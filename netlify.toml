@@ -9,3 +9,11 @@ NODE_VERSION = "20"
 from = "/*"
 to = "/index.html"
 status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["puppeteer-core", "@sparticuz/chromium"]
+
+[functions."*"]
+  timeout = 26
+  memory = 1536

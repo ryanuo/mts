@@ -3,16 +3,17 @@ import process from 'node:process'
 
 export async function usePuppeteer() {
   const isDev = process.env.NODE_ENV === 'development'
-  const useBrowserless = !!process.env.BLESS_TOKEN
 
   const puppeteer = await import('puppeteer-core')
 
-  if (useBrowserless) {
-    // 👉 远程 browserless.io
-    return puppeteer.connect({
-      browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
-    })
-  }
+  // 暂时不使用
+  // const useBrowserless = !!process.env.BLESS_TOKEN
+  // if (useBrowserless) {
+  //   // 👉 远程 browserless.io
+  //   return puppeteer.connect({
+  //     browserWSEndpoint: `wss://production-sfo.browserless.io?token=${process.env.BLESS_TOKEN}`,
+  //   })
+  // }
 
   if (isDev) {
     // 👉 本地开发用系统 Chrome

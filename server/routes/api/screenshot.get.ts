@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     if (useOrigin) {
       // 🔹 使用 https://github.com/ryanuo/screenshot 接口截图
-      const url = `https://screenshot-ryanuo.vercel.app/api?url=${target}`
+      const url = `https://sc27.netlify.app/.netlify/functions/screenshot?url=${target}`
       const response = await fetch(url, { method: 'GET' })
 
       if (!response.ok) {

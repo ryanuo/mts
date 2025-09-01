@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const isDev = process.env.NODE_ENV === 'development'
   const useBrowserless = !!process.env.BLESS_TOKEN
+  const useOrigin = process.env.ORIGIN === 'true'
 
   const target = isDev
     ? `http://localhost:${process.env.PORT || 3000}?config=${config}`
@@ -24,8 +25,20 @@ export default defineEventHandler(async (event) => {
   try {
     let screenshot: any
 
-    if (useBrowserless) {
-      // browserless.io 截图
+    if (useOrigin) {
+      // 🔹 使用 https://github.com/ryanuo/screenshot 接口截图
+      const url = `https://screenshot-ryanuo.vercel.app/api?url=${target}`
+      const response = await fetch(url, { method: 'GET' })
+
+      if (!response.ok) {
+        throw new Error(`screenshot failed: ${response.status} ${response.statusText}`)
+      }
+
+      const arrayBuffer = await response.arrayBuffer()
+      screenshot = Buffer.from(arrayBuffer)
+    }
+    else if (useBrowserless) {
+      // 🔹 Browserless 截图
       const TOKEN = process.env.BLESS_TOKEN
       const url = `https://production-sfo.browserless.io/screenshot?token=${TOKEN}`
       const headers = {
@@ -40,7 +53,6 @@ export default defineEventHandler(async (event) => {
         },
       }
 
-      // 内置 fetch，不依赖 node-fetch
       const response = await fetch(url, {
         method: 'POST',
         headers,
@@ -55,7 +67,7 @@ export default defineEventHandler(async (event) => {
       screenshot = Buffer.from(arrayBuffer)
     }
     else {
-      // 本地 Puppeteer
+      // 🔹 本地 Puppeteer
       const browser = await usePuppeteer()
       const page = await browser.newPage()
       await page.setViewport({ width: 1280, height: 800 })

@@ -19,8 +19,11 @@ export async function usePuppeteer() {
     // 👉 本地开发用系统 Chrome
     return puppeteer.launch({
       headless: true,
-      executablePath:
-        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      executablePath: process.platform === 'win32'
+        ? 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
+        : process.platform === 'linux'
+          ? '/usr/bin/google-chrome'
+          : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       defaultViewport: { width: 1280, height: 800 },
     })
   }

@@ -25,9 +25,26 @@ export default defineEventHandler(async (event) => {
   try {
     let screenshot: any
 
+    if (isDev) {
+      // 🔹 本地 Puppeteer
+      const browser = await usePuppeteer()
+      const page = await browser.newPage()
+      await page.setViewport({ width: 1280, height: 800 })
+      await page.goto(target, { waitUntil: 'networkidle2', timeout: 60000 })
+      await page.waitForNetworkIdle()
+      await sleep(2000)
+
+      screenshot = await page.screenshot({ type: 'jpeg', fullPage: true, quality: 100 })
+      await browser.close()
+
+      event.node.res.setHeader('Content-Type', 'image/jpeg')
+      return screenshot
+    }
+
     if (useOrigin) {
       // 🔹 使用 https://github.com/ryanuo/screenshot 接口截图
-      const url = `https://sc27.netlify.app/.netlify/functions/screenshot?url=${target}`
+      const originTarget = `https://mts.ryanuo.cc?config=${config}`
+      const url = `https://sc27.netlify.app/.netlify/functions/screenshot?url=${originTarget}`
       const response = await fetch(url, { method: 'GET' })
 
       if (!response.ok) {
@@ -65,22 +82,8 @@ export default defineEventHandler(async (event) => {
 
       const arrayBuffer = await response.arrayBuffer()
       screenshot = Buffer.from(arrayBuffer)
+      return screenshot
     }
-    else {
-      // 🔹 本地 Puppeteer
-      const browser = await usePuppeteer()
-      const page = await browser.newPage()
-      await page.setViewport({ width: 1280, height: 800 })
-      await page.goto(target, { waitUntil: 'networkidle2', timeout: 60000 })
-      await page.waitForNetworkIdle()
-      await sleep(2000)
-
-      screenshot = await page.screenshot({ type: 'jpeg', fullPage: true, quality: 100 })
-      await browser.close()
-    }
-
-    event.node.res.setHeader('Content-Type', 'image/jpeg')
-    return screenshot
   }
   catch (err: any) {
     console.error('Screenshot failed:', err)

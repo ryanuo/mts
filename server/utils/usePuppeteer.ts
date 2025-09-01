@@ -1,6 +1,14 @@
 // server/utils/usePuppeteer.ts
 import process from 'node:process'
 
+const chromeOptions = {
+  headless: true,
+  defaultViewport: {
+    width: 1280,
+    height: 720,
+    deviceScaleFactor: 2,
+  },
+}
 export async function usePuppeteer() {
   const isDev = process.env.NODE_ENV === 'development'
 
@@ -18,13 +26,12 @@ export async function usePuppeteer() {
   if (isDev) {
     // 👉 本地开发用系统 Chrome
     return puppeteer.launch({
-      headless: true,
       executablePath: process.platform === 'win32'
         ? 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
         : process.platform === 'linux'
           ? '/usr/bin/google-chrome'
           : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      defaultViewport: { width: 1280, height: 800 },
+      ...chromeOptions,
     })
   }
 
@@ -32,8 +39,7 @@ export async function usePuppeteer() {
   const chromium = await import('@sparticuz/chromium')
   return puppeteer.launch({
     args: chromium.default.args,
-    defaultViewport: { width: 1280, height: 800 },
     executablePath: await chromium.default.executablePath(),
-    headless: true,
+    ...chromeOptions,
   })
 }

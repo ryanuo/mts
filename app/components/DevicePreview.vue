@@ -13,7 +13,7 @@ const deviceConfigs: DeviceConfig[] = [
   {
     key: Device.computer,
     name: '电脑',
-    bg: 'bg-[url(/assets/images/new-model/computer.png)]',
+    bg: 'bg-[url(/assets/images/bg-model/computer.png)]',
     style: 'h-[572px] w-[610px] left-1/2 top-0 absolute bg-contain bg-no-repeat -translate-x-1/2',
     activeClass: 'scale-120 z-9999',
     inactiveClass: 'opacity-0 pointer-events-none',
@@ -29,7 +29,7 @@ const deviceConfigs: DeviceConfig[] = [
   {
     key: Device.laptop,
     name: '笔记本',
-    bg: 'bg-[url(/assets/images/new-model/laptop.png)]',
+    bg: 'bg-[url(/assets/images/bg-model/laptop.png)]',
     style: 'h-[380px] w-[600px] scale-90 left-0 top-50 absolute bg-contain bg-no-repeat',
     activeClass: 'top-1/2 right-1/2 translate-x-1/2 -translate-y-1/3 scale-150! z-[9999]',
     inactiveClass: 'opacity-0 pointer-events-none',
@@ -45,7 +45,7 @@ const deviceConfigs: DeviceConfig[] = [
   {
     key: Device.phone,
     name: '手机',
-    bg: 'bg-[url(/assets/images/new-model/mobile.png)]',
+    bg: 'bg-[url(/assets/images/bg-model/mobile.png)]',
     style: 'h-[350px] w-[168px] scale-80 left-[56%] top-60 absolute z-2 bg-contain bg-no-repeat',
     activeClass: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 scale-200! z-[9999]',
     inactiveClass: 'opacity-0 pointer-events-none',
@@ -61,7 +61,7 @@ const deviceConfigs: DeviceConfig[] = [
   {
     key: Device.pad,
     name: '平板',
-    bg: 'bg-[url(/assets/images/new-model/tablet.png)]',
+    bg: 'bg-[url(/assets/images/bg-model/tablet.png)]',
     style: 'h-[400px] w-[300px] left-[65%] top-40 absolute bg-contain bg-no-repeat',
     activeClass: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 scale-180! z-[9999]',
     inactiveClass: 'opacity-0 pointer-events-none',

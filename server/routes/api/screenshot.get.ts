@@ -29,15 +29,19 @@ export default defineEventHandler(async (event) => {
       // 🔹 本地 Puppeteer
       const browser = await usePuppeteer()
       const page = await browser.newPage()
-      await page.setViewport({ width: 1280, height: 800 })
+      await page.setViewport({
+        width: 1280,
+        height: 720,
+        deviceScaleFactor: 2,
+      })
       await page.goto(target, { waitUntil: 'networkidle2', timeout: 60000 })
       await page.waitForNetworkIdle()
       await sleep(2000)
 
-      screenshot = await page.screenshot({ type: 'jpeg', fullPage: true, quality: 100 })
+      screenshot = await page.screenshot({ type: 'png' })
       await browser.close()
 
-      event.node.res.setHeader('Content-Type', 'image/jpeg')
+      event.node.res.setHeader('Content-Type', 'image/png')
       return screenshot
     }
 
